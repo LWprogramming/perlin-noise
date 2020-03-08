@@ -53,10 +53,14 @@ public class PerlinNoise : MonoBehaviour
         float n10 = dotProductGradientCoordinate(x1, y0, boxX, boxY);
         float n11 = dotProductGradientCoordinate(x1, y1, boxX, boxY);
 
-        // interpolation weights
-        float sx = boxX - (float) x0;
-        float sy = boxY - (float) y0;
-        
+        // interpolation weights -- following the ease curve, not the wikipedia implementation here.
+        // float sx = boxX - (float) x0;
+        float sx = 3 * Mathf.Pow(boxX - (float)x0, 2) - 2 * Mathf.Pow(boxX - (float)x0, 3);
+        // float sy = boxY - (float) y0;
+        float sy = 3 * Mathf.Pow(boxY - (float)y0, 2) - 2 * Mathf.Pow(boxY - (float)y0, 3);
+
+
+
         // do the actual interpolation-- if you do the algebra you'll see that it doesn't actually matter whether we do both x and then one y or two y then one x.
         // algebraically it has the same result.
         float ix0 = Mathf.Lerp(n00, n01, sx);
@@ -89,8 +93,7 @@ public class PerlinNoise : MonoBehaviour
         pseudorandomGradientVectors = new Vector2[boxSideLength + 1, boxSideLength + 1];
         transform.localScale = new Vector3(boxSideLength, boxSideLength, 1);
         assignPseudorandomGradientVectors();
-        applyPerlinNoise(0.05f);
-
+        applyPerlinNoise(0.9f);
     }
 
     // Update is called once per frame
